@@ -77,7 +77,7 @@ public sealed class Booking : Entity
     {
         if (Status != BookingStatus.Reserved)
         {
-            return Result.Failure(BookingErrors.NotPending);
+            return Result.Failure(BookingErrors.NotReserved);
         }
         
         Status = BookingStatus.Confirmed;
@@ -92,7 +92,7 @@ public sealed class Booking : Entity
     {
         if (Status != BookingStatus.Reserved)
         {
-            return Result.Failure(BookingErrors.NotPending);
+            return Result.Failure(BookingErrors.NotReserved);
         }
         
         Status = BookingStatus.Rejected;
@@ -122,7 +122,7 @@ public sealed class Booking : Entity
     {
         if (Status != BookingStatus.Confirmed)
         {
-            return Result.Failure(BookingErrors.NotCancelable);
+            return Result.Failure(BookingErrors.NotConfirmed);
         }
 
         var currentDate = DateOnly.FromDateTime(utcNow);

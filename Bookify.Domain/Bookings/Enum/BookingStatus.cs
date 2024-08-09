@@ -5,6 +5,6 @@ public enum BookingStatus
     Reserved,
     Confirmed,
     Rejected,
-    Canceled,
+    Cancelled,
     Completed
 }
