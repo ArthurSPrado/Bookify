@@ -13,6 +13,7 @@ public static class DependencyInjection
         });
 
         services.AddTransient<PricingService>();
+        services.Aggregate()
             
         return services;
     }

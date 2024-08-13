@@ -2,6 +2,7 @@ using Bookify.Domain.Abstractions;
 using Bookify.Domain.Apartments;
 using Bookify.Domain.Bookings.Enum;
 using Bookify.Domain.Bookings.Events;
+using Bookify.Domain.Bookings.Services;
 using Bookify.Domain.Bookings.ValueObjects;
 
 namespace Bookify.Domain.Bookings;
@@ -51,8 +52,10 @@ public sealed class Booking : Entity
         Guid userId,
         DateRange duration,
         DateTime utcNow,
-        PricingDetails pricingDetails)
+        PricingService pricingService)
     {
+        var pricingDetails = pricingService.CalculatePrice(apartment, duration);
+        
         var booking = new Booking(
             Guid.NewGuid(),
             apartment.Id,
@@ -66,7 +69,7 @@ public sealed class Booking : Entity
             utcNow
         );
         
-        booking.AddDomainEvent(new BookingReservedDomainEvent(booking.Id));
+        booking.RaiseDomainEvent(new BookingReservedDomainEvent(booking.Id));
         
         apartment.LastBookedOnUtc = utcNow;
         
@@ -83,7 +86,7 @@ public sealed class Booking : Entity
         Status = BookingStatus.Confirmed;
         ConfirmedOnUtc = utcNow;
         
-        AddDomainEvent(new BookingConfirmedDomainEvent(Id));
+        RaiseDomainEvent(new BookingConfirmedDomainEvent(Id));
         
         return Result.Success();
     }
@@ -98,7 +101,7 @@ public sealed class Booking : Entity
         Status = BookingStatus.Rejected;
         RejectedOnUtc = utcNow;
         
-        AddDomainEvent(new BookingRejectedDomainEvent(Id));
+        RaiseDomainEvent(new BookingRejectedDomainEvent(Id));
         
         return Result.Success();
     }
@@ -113,7 +116,7 @@ public sealed class Booking : Entity
         Status = BookingStatus.Completed;
         CompletedOnUtc = utcNow;
         
-        AddDomainEvent(new BookingCompletedDomainEvent(Id));
+        RaiseDomainEvent(new BookingCompletedDomainEvent(Id));
         
         return Result.Success();
     }
@@ -135,7 +138,7 @@ public sealed class Booking : Entity
         Status = BookingStatus.Cancelled;
         CancelledOnUtc = utcNow;
         
-        AddDomainEvent(new BookingCancelledDomainEvent(Id));
+        RaiseDomainEvent(new BookingCancelledDomainEvent(Id));
         
         return Result.Success();
     }
