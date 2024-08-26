@@ -35,5 +35,6 @@ internal sealed class ApartmentConfiguration : IEntityTypeConfiguration<Apartmen
         });
 
         builder.Property<uint>("Version").IsRowVersion();
+        
     }
 }
