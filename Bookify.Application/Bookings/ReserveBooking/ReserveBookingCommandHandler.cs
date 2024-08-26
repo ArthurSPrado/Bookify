@@ -3,11 +3,13 @@ using Bookify.Application.Abstractions.Messaging.Command;
 using Bookify.Application.Bookings.ReserveBooking;
 using Bookify.Application.Exceptions;
 using Bookify.Domain.Abstractions;
+using Bookify.Domain.Apartments;
 using Bookify.Domain.Apartments.Interfaces;
 using Bookify.Domain.Bookings;
 using Bookify.Domain.Bookings.Intefaces;
 using Bookify.Domain.Bookings.Services;
 using Bookify.Domain.Bookings.ValueObjects;
+using Bookify.Domain.Users;
 using Bookify.Domain.Users.Interfaces;
 
 namespace Bookify.Application.Bookings;
@@ -43,14 +45,14 @@ public class ReserveBookingCommandHandler : ICommandHandler<ReserveBookingComman
 
         if (user is null)
         {
-            return Result.Failure<Guid>(UserErrors.UserNotFound);
+            return Result.Failure<Guid>(UserErrors.NotFound);
         }
         
         var apartment = await _apartmentRepository.GetByIdAsync(request.ApartmentId, cancellationToken);
         
         if (apartment is null)
         {
-            return Result.Failure<Guid>(ApartmentErrors.ApartmentNotFound);
+            return Result.Failure<Guid>(ApartmentErrors.NotFound);
         }
         
         var duration = DateRange.Create(request.StartDate, request.EndDate);

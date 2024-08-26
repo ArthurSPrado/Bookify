@@ -31,7 +31,6 @@ public class Result
     public static Result<T> Create<T>(T? value) => value == null 
         ? Failure<T>(Error.NullValue) 
         : Success(value);
-    Task
 }
 
 public class Result<T> : Result
